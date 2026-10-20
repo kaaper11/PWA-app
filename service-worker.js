@@ -4,7 +4,7 @@ const MY_CACHE = 'cache-name';
 const MY_FILES = [
         '/style.css',
         '/icon.png',
-        '/page.html',
+        '/index.html',
         '/manifest.json'
 ];
 
