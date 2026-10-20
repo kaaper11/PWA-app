@@ -2,10 +2,10 @@
 const MY_CACHE = 'cache-name';
 // w tej tablicy lądują wszystkie pliki, które chcemy dodać do cache
 const MY_FILES = [
-        '/style.css',
-        '/icon.png',
-        '/index.html',
-        '/manifest.json'
+        './style.css',
+        './icon.png',
+        './index.html',
+        './manifest.json'
 ];
 
 // instalujemy nasz service worker
