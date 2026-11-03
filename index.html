@@ -8,8 +8,13 @@
     <title>Moja strona</title>
 </head>
 <body>
-    <p>Szerokość geograficzna: <span id="szerokosc">Pobieranie...</span></p>
-    <p>Długość geograficzna: <span id="dlugosc">Pobieranie...</span></p>
+    <button id="start-sensors-btn" style="padding: 10px 20px; font-size: 16px; margin-bottom: 20px;">
+        Aktywuj czujniki
+    </button>
+
+    <p>A: <span id="alfa">Pobieranie...</span></p>
+    <p>β: <span id="beta">Pobieranie...</span></p>
+    <p>Γ: <span id="gamma">Pobieranie...</span></p>
 
 <script>
 if ('serviceWorker' in navigator) {
@@ -22,33 +27,42 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <script>
-    const szer = document.getElementById('szerokosc');
-    const dlug = document.getElementById("dlugosc");
+    const alfa = document.getElementById('alfa');
+    const beta = document.getElementById("beta");
+    const gamma = document.getElementById("gamma");
+    const btn = document.getElementById("start-sensors-btn"); // Pobranie przycisku
 
-    function getWspolrzedne(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        szer.textContent = latitude.toFixed(6);
-        dlug.textContent = longitude.toFixed(6);
+    function startOrientation() {
+        window.addEventListener('deviceorientation', (event) => {
+            alfa.textContent = event.alpha !== null ? event.alpha.toFixed(1) : 0;
+            beta.textContent = event.beta !== null ? event.beta.toFixed(1) : 0;
+            gamma.textContent = event.gamma !== null ? event.gamma.toFixed(1) : 0;
+        });
     }
 
-    function obsugaBledow(error) {
-        console.warn(`Błąd lokalizacji (${error.code}): ${error.message}`);
-    }
-
-    function startTracking() {
-        if ("geolocation" in navigator) {
-            navigator.geolocation.watchPosition(getWspolrzedne, obsugaBledow, {
-                enableHighAccuracy: true,
-                maximumAge: 0
+    function handleClick() {
+        if (typeof DeviceOrientationEvent.requestPermission === "function") { // Zmieniono na sprawdzanie Orientation
+            Promise.all([
+                DeviceMotionEvent.requestPermission().catch(() => "denied"),
+                DeviceOrientationEvent.requestPermission().catch(() => "denied")
+            ]).then(([motionPermission, orientationPermission]) => {
+                if (motionPermission === "granted" && orientationPermission === "granted") {
+                    startOrientation();
+                    btn.style.display = 'none';
+                } else {
+                    alert("Odrzucono dostęp do czujników.");
+                }
+            }).catch(err => {
+                console.error("Błąd podczas prośby o uprawnienia:", err);
             });
         } else {
-            szer.textContent = "Brak wsparcia dla GPS";
+            startOrientation();
+            btn.style.display = 'none';
         }
     }
 
-    window.onload = startTracking;
+    btn.addEventListener("click", handleClick);
+
 </script>
 </body>
 </html>
