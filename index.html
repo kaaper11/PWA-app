@@ -19,6 +19,11 @@
     <p>Y: <span id="y">Pobieranie...</span></p>
     <p>Z: <span id="z">Pobieranie...</span></p>
 
+    <button id="vibration-btn" style="padding: 10px 20px; font-size: 16px; margin-top: 20px;">
+        Wibracja
+    </button>
+    
+
 <script>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js').then(function () {
@@ -33,7 +38,9 @@ if ('serviceWorker' in navigator) {
     const alfa = document.getElementById('alfa');
     const beta = document.getElementById("beta");
     const gamma = document.getElementById("gamma");
+
     const btn = document.getElementById("start-sensors-btn");
+    const btnVibration = document.getElementById("vibration-btn");
 
     const x = document.getElementById("x");
     const y = document.getElementById("y");
@@ -78,7 +85,13 @@ if ('serviceWorker' in navigator) {
         }
     }
 
+    function handleVibration() {
+        navigator.vibrate(100);
+    }
+
     btn.addEventListener("click", handleClick);
+    btnVibration.addEventListener("click", handleVibration);
+    
 
 </script>
 </body>
