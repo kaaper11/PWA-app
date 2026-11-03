@@ -15,6 +15,9 @@
     <p>A: <span id="alfa">Pobieranie...</span></p>
     <p>β: <span id="beta">Pobieranie...</span></p>
     <p>Γ: <span id="gamma">Pobieranie...</span></p>
+    <p>X: <span id="x">Pobieranie...</span></p>
+    <p>Y: <span id="y">Pobieranie...</span></p>
+    <p>Z: <span id="z">Pobieranie...</span></p>
 
 <script>
 if ('serviceWorker' in navigator) {
@@ -30,7 +33,19 @@ if ('serviceWorker' in navigator) {
     const alfa = document.getElementById('alfa');
     const beta = document.getElementById("beta");
     const gamma = document.getElementById("gamma");
-    const btn = document.getElementById("start-sensors-btn"); // Pobranie przycisku
+    const btn = document.getElementById("start-sensors-btn");
+
+    const x = document.getElementById("x");
+    const y = document.getElementById("y");
+    const z = document.getElementById("z");
+
+    function handleMotion() {
+        window.addEventListener('devicemotion', (event) => {
+            x.textContent = event.acceleration.x !== null ? event.acceleration.x.toFixed(2) : 0;
+            y.textContent = event.acceleration.y !== null ? event.acceleration.y.toFixed(2) : 0;
+            z.textContent = event.acceleration.z !== null ? event.acceleration.z.toFixed(2) : 0;
+        });
+    }
 
     function startOrientation() {
         window.addEventListener('deviceorientation', (event) => {
@@ -47,6 +62,7 @@ if ('serviceWorker' in navigator) {
                 DeviceOrientationEvent.requestPermission().catch(() => "denied")
             ]).then(([motionPermission, orientationPermission]) => {
                 if (motionPermission === "granted" && orientationPermission === "granted") {
+                    handleMotion();
                     startOrientation();
                     btn.style.display = 'none';
                 } else {
@@ -56,6 +72,7 @@ if ('serviceWorker' in navigator) {
                 console.error("Błąd podczas prośby o uprawnienia:", err);
             });
         } else {
+            handleMotion();
             startOrientation();
             btn.style.display = 'none';
         }
