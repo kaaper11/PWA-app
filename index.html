@@ -22,6 +22,8 @@
     <button id="vibration-btn" style="padding: 10px 20px; font-size: 16px; margin-top: 20px;">
         Wibracja
     </button>
+
+    <p>Typ orientacji: <span id="orientation-type">Pobieranie...</span></p>
     
 
 <script>
@@ -45,6 +47,8 @@ if ('serviceWorker' in navigator) {
     const x = document.getElementById("x");
     const y = document.getElementById("y");
     const z = document.getElementById("z");
+
+    const type = document.getElementById("orientation-type");
 
     function handleMotion() {
         window.addEventListener('devicemotion', (event) => {
@@ -88,6 +92,10 @@ if ('serviceWorker' in navigator) {
     function handleVibration() {
         navigator.vibrate(100);
     }
+
+    screen.orientation.addEventListener("change", () => {
+        type.textContent = screen.orientation.type;
+    });
 
     btn.addEventListener("click", handleClick);
     btnVibration.addEventListener("click", handleVibration);
